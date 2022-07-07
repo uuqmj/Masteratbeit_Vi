@@ -25,7 +25,6 @@ Anzahl_WP = list(range (0,88))
 M = 100000
 Aufheizfaktor_DHW = 2
 loss_DHW = 0.03
-#m = Model()
 
 m = gp.Model("mip1")
 
