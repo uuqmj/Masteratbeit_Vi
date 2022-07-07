@@ -26,8 +26,11 @@ M = 100000
 Aufheizfaktor_DHW = 2
 loss_DHW = 0.03
 
+#Minimiere Modell
 m = gp.Model("mip1")
+m.modelSense =  GRB.MINIMIZE
 
+#Definiere Entscheidungsvariablen
 WP_Betrieb_DHW = m.addVars(Periode, Anzahl_WP, vtype=GRB.BINARY, name= "WP_Betrieb_DHW")
 WP_Anfahrtvorgang_DHW = m.addVars(Periode, Anzahl_WP,vtype=GRB.BINARY, name = "WP_Anfahrtvorgang_DHW ")
 DHW_Speichertemperatur = m.addVars(Periode, Anzahl_WP,lb=43.0, ub= 53.0, vtype=GRB.CONTINUOUS, name = "DHW_Speichertemperatur")
@@ -35,10 +38,10 @@ Wärmemenge_DHW = m.addVars(Periode,  Anzahl_WP,lb =0, vtype=GRB.CONTINUOUS, nam
 Stromverbrauch = m.addVars(Periode, Anzahl_WP,lb=0,vtype=GRB.CONTINUOUS, name = "Stromverbrauch")
 
 
-#m.modelSense =  GRB.MINIMIZE
+#Zielfunktion
 m.setObjective(sum(WP_Anfahrtvorgang_DHW[i,j] for i in Periode for j in Anzahl_WP))
 
-
+#Nebenbedinungen
 m.addConstrs((WP_Betrieb_DHW[i,j] * 0.4 <= Stromverbrauch[i,j] 
                 for i in Periode for j in Anzahl_WP))
 
